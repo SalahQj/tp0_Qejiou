@@ -108,9 +108,7 @@ public class Bb implements Serializable {
 
     /**
      * Envoie la question au serveur.
-     * En attendant de l'envoyer à un LLM, le serveur fait un traitement quelconque, juste pour tester :
-     * Le traitement consiste à copier la question en minuscules et à l'entourer avec "||". Le rôle système
-     * est ajouté au début de la première réponse.
+     * REMPLACÉ PAR LE CODE DU BONUS (INVERSION DE LA QUESTION)
      *
      * @return null pour rester sur la même page.
      */
@@ -122,16 +120,23 @@ public class Bb implements Serializable {
             facesContext.addMessage(null, message);
             return null;
         }
-        // Entourer la réponse avec "||".
-        this.reponse = "||";
-        // Si la conversation n'a pas encore commencé, ajouter le rôle système au début de la réponse
+
+        // --- DÉBUT DE MON TRAITEMENT PERSONNEL (BONUS) ---
+
+        // 1. Utiliser un StringBuilder pour inverser la chaîne
+        String questionInversee = new StringBuilder(question).reverse().toString();
+
+        // 2. Construire la nouvelle réponse
+        this.reponse = "Voici votre question, mais à l'envers :\n" + questionInversee;
+
+        // 3. Gérer le rôle système (important de garder cette partie)
         if (this.conversation.isEmpty()) {
-            // Ajouter le rôle système au début de la réponse
-            this.reponse += roleSysteme.toUpperCase(Locale.FRENCH) + "\n";
             // Invalide le bouton pour changer le rôle système
             this.roleSystemeChangeable = false;
         }
-        this.reponse += question.toLowerCase(Locale.FRENCH) + "||";
+
+        // --- FIN DE MON TRAITEMENT PERSONNEL ---
+
         // La conversation contient l'historique des questions-réponses depuis le début.
         afficherConversation();
         return null;
@@ -189,5 +194,3 @@ public class Bb implements Serializable {
     }
 
 }
-
-
